@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% block body %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<style>
+    *,
+    *:before,
+    *:after {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Lucida Sans', sans-serif;
+        background-color: rgb(247, 239, 246);
+    }
+
+    .background {
+        width: 430px;
+        height: 520px;
+        position: absolute;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+    }
+
+    .background .shape {
+        height: 200px;
+        width: 200px;
+        position: absolute;
+        border-radius: 50%;
+    }
+
+    .shape:first-child {
+        background: linear-gradient(#9b22ea,
+                #bf23f6);
+        left: -80px;
+        top: -80px;
+    }
+
+    .shape:last-child {
+        background: linear-gradient(to right,
+                #2fffff,
+                #87f8ef);
+        right: -90px;
+        bottom: -80px;
+    }
+
+    form {
+        height: 550px;
+        width: 480px;
+        background-color: rgba(255, 255, 255, 0.07);
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+        padding: 40px 25px;
+    }
+
+    form * {
+        font-family: 'Lucida Sans', sans-serif;
+        color: #161515;
+        letter-spacing: 0.2px;
+        outline: none;
+        border: none;
+    }
+
+    form h3 {
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 42px;
+    }
+
+    label {
+        display: block;
+        margin-top: 30px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    input {
+        display: block;
+        height: 50px;
+        width: 100%;
+        background-color: rgba(63, 60, 60, 0.07);
+        border-radius: 3px;
+        padding: 0 10px;
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    ::placeholder {
+        color: #0f0f0f;
+    }
+
+    button {
+        margin-top: 50px;
+        width: 100%;
+        background-color: #ffffff;
+        color: #080710;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .share-btn-container {
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        position: fixed;
+        top: 50%;
+        right: -30%;
+        transform: translateY(-30%);
+        margin: 10px 5px 10px 10px;
+    }
+
+    .share-btn-container a i {
+        font-size: 38px;
+    }
+
+    .share-btn-container a {
+        margin: 12px 0;
+        transition: 500ms;
+    }
+
+    .share-btn-container a:hover {
+        transform: scale(1.2);
+    }
+
+    .share-btn-container .fa-facebook {
+        color: #3b5998;
+    }
+
+    .share-btn-container .fa-twitter {
+        color: #1da1f2;
+    }
+
+    .share-btn-container .fa-linkedin {
+        color: #0077b5;
+    }
+
+    .share-btn-container .fa-whatsapp {
+        color: #25d366;
+    }
+
+    .share-btn-container .fa-envelope {
+        color: #fda6c3;
+    }
+</style>
+<div class="background">
+    <div class="shape"></div>
+    <div class="shape"></div>
+
+    <form id="form" method="post">
+        {% csrf_token %}
+        <h3>Shorten Your URLs!!</h3>
+        <label for="url">URL</label>
+        {{form.long_url}}
+        <button>Shorten</button>
+
+        <div>
+            {% if errors %}
+            <p>{{errors}}</p>
+            {% endif %}
+        </div>
+        <div>
+            {% if new_url %}
+            <h2>Your shortened Url</h2>
+            <p>{{new_url}}</p>
+            <p><span>Original URL:</span> {{long_url}}</p>
+        </div>
+        {% endif %}
+    </form>
+    <div class="share-btn-container">
+        <a href="#" class="facebook-btn">
+            <i class="fab fa-facebook"></i>
+        </a>
+
+        <a href="#" class="twitter-btn">
+            <i class="fab fa-twitter"></i>
+        </a>
+        <a href="#" class="linkedin-btn">
+            <i class="fab fa-linkedin"></i>
+        </a>
+
+        <a href="#" class="whatsapp-btn">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+        <a href="mailto:example@website.com"><i class="fas fa-envelope"></i></a>
+    </div>
+</div>
+<script>
+    const facebookBtn = document.querySelector(".facebook-btn");
+    const twitterBtn = document.querySelector(".twitter-btn");
+    const linkedinBtn = document.querySelector(".linkedin-btn");
+    const whatsappBtn = document.querySelector(".whatsapp-btn");
+
+    function share() {
+        let postUrl = encodeURI(document.location.href);
+        let postTitle = encodeURI("Hi, please fill in the survey below: ");
+        ;
+
+        facebookBtn.setAttribute(
+            "href",
+            `https://www.facebook.com/sharer.php?u=${postUrl}`
+        );
+
+        twitterBtn.setAttribute(
+            "href",
+            `https://twitter.com/share?url=${postUrl}&text=${postTitle}`
+        );
+
+        linkedinBtn.setAttribute(
+            "href",
+            `https://www.linkedin.com/shareArticle?url=${postUrl}&title=${postTitle}`
+        );
+
+        whatsappBtn.setAttribute(
+            "href",
+            `https://wa.me/?text=${postTitle} ${postUrl}`
+        );
+    }
+
+    share();
+</script>
+{% endblock body %}
